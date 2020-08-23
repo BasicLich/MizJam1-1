@@ -75,7 +75,11 @@ public class GameManager : MonoBehaviour
                 //TODO: Check if game has ended
                 StartCurrentLevel();
             }
+#if UNITY_EDITOR
+            else if (Input.GetKeyDown(Constants.RESTART_KEYCODE))
+#else 
             else if (!CurrentLevel.IsWon && Input.GetKeyDown(Constants.RESTART_KEYCODE))
+#endif
             {
                 CurrentLevel = levels[currentLevelIndex].StartLevel();
             }

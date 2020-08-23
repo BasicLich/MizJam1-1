@@ -154,7 +154,8 @@ public class GameLevel : MonoBehaviour
                             if (gridTiles[destination.x][destination.y] != null)
                             {
                                 Vector2Int existingTileDestination = destination + movementDirection;
-                                if (IsDestinationOnGrid(existingTileDestination) &&
+                                if (gridTiles[destination.x][destination.y].CanBeMoved &&
+                                    IsDestinationOnGrid(existingTileDestination) &&
                                     gridTiles[existingTileDestination.x][existingTileDestination.y] == null)
                                 {
                                     movePlayer = true;
