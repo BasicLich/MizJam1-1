@@ -23,6 +23,7 @@ public class Tile : MonoBehaviour
         public Color color;
         public Vector2Int offset;
         public float angle;
+        public bool horizontalFlip;
         public void SetColor(Color c)
         {
             color = c;
@@ -56,6 +57,7 @@ public class Tile : MonoBehaviour
     public const string COLOR_PROPERTY = "_Color";
     public const string OFFSET_PROPERTY = "_Offset";
     public const string ANGLE_PROPERTY = "_Angle";
+    public const string HORIZONTAL_FLIP_PROPERTY = "_HorizontalFlip";
 
 
     // Start is called before the first frame update
@@ -83,6 +85,7 @@ public class Tile : MonoBehaviour
         {
             renderer.sharedMaterial = alphaBlended ? GameManager.Instance.TileAlphaMaterial : GameManager.Instance.TileMaterial;
             UpdatePropertyBlock();
+            renderer.transform.localPosition = Vector3.zero;
         }
         else
         {
@@ -116,6 +119,7 @@ public class Tile : MonoBehaviour
         propertyBlock.SetColor(COLOR_PROPERTY, tileData.color);
         propertyBlock.SetVector(OFFSET_PROPERTY, new Vector4(tileData.offset.x, tileData.offset.y));
         propertyBlock.SetFloat(ANGLE_PROPERTY, tileData.angle);
+        propertyBlock.SetFloat(HORIZONTAL_FLIP_PROPERTY, tileData.horizontalFlip ? 1 : 0);
         renderer.SetPropertyBlock(propertyBlock);
     }
 

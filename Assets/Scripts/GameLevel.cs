@@ -238,4 +238,15 @@ public class GameLevel : MonoBehaviour
     {
         return destination.x >= 0 && destination.y >= 0 && destination.x < Constants.GRID_SIZE && destination.y < Constants.GRID_SIZE;
     }
+
+    [ContextMenu("OrderTiles")]
+    public void OrderTiles()
+    {
+        GameTile[] tiles = GetComponentsInChildren<GameTile>();
+        for (int i = 0; i < tiles.Length; i++)
+        {
+            Vector3 lp = tiles[i].transform.localPosition;
+            tiles[i].transform.localPosition = new Vector3(Mathf.RoundToInt(lp.x), Mathf.RoundToInt(lp.y), lp.z);
+        }
+    }
 }
