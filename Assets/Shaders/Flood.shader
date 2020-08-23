@@ -82,7 +82,7 @@ Shader "Flood"
 					result = colored * min(p, result) + (1 - colored) * result;
 				}
 				}
-				return max(result, base - 0.1 * (1-result));
+				return max(result, base - 0.1 * max(base - result, 0.205));
 			}
 			
 
@@ -146,7 +146,7 @@ Shader "Flood"
 }
 /*ASEBEGIN
 Version=18100
-597;123;1703;858;1491.588;501.5938;1.430491;True;True
+774;149;1703;827;1491.588;475.1297;1.430491;True;True
 Node;AmplifyShaderEditor.TextureCoordinatesNode;17;-1120,224;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;37;-864,224;Inherit;False;2;2;0;FLOAT2;0,0;False;1;FLOAT2;3,3;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.SimpleTimeNode;33;-976,352;Inherit;False;1;0;FLOAT;3;False;1;FLOAT;0
@@ -169,9 +169,9 @@ Node;AmplifyShaderEditor.RangedFloatNode;1;-640,128;Inherit;False;Property;_Pixe
 Node;AmplifyShaderEditor.TexturePropertyNode;2;-704,-192;Inherit;True;Property;_MainTex;MainTex;1;0;Create;True;0;0;False;0;False;f4d31aa109c919d4595094f627510932;None;False;white;Auto;Texture2D;-1;0;1;SAMPLER2D;0
 Node;AmplifyShaderEditor.StepOpNode;36;1056,224;Inherit;True;2;0;FLOAT;0.7;False;1;FLOAT;0.2;False;1;FLOAT;0
 Node;AmplifyShaderEditor.TextureCoordinatesNode;3;-704,0;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.CustomExpressionNode;15;-153.5,-126;Inherit;False;float4 base = tex2D(Tex, UV)@$float4 result = base@$float isColored = result.a * Noise@$for(int x = -1@ x <= 1@ x++)${$for(int y = -1@ y <= 1@ y++)${$	float4 p = tex2D(Tex, UV + float2(x * PS, y * PS))@$	float colored = p.a * Noise * isColored@	$	result = colored * min(p, result) + (1 - colored) * result@$}$}$return max(result, base - 0.1 * (1-result))@;4;False;4;True;Tex;SAMPLER2D;;In;;Inherit;False;True;UV;FLOAT2;0,0;In;;Inherit;False;True;PS;FLOAT;0;In;;Inherit;False;True;Noise;FLOAT;0;In;;Inherit;False;My Custom Expression;True;False;0;4;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.CustomExpressionNode;16;-162.6175,-419.6718;Inherit;False;float4 result = tex2D(Tex, UV)@$float isColored = 1 - step( result.r, 0) + 1 - step(result.g, 0) + 1 - step(result.b, 0)@$isColored = saturate(isColored)@$for(int x = -1@ x <= 1@ x++)${$for(int y = -1@ y <= 1@ y++)${$	float4 p = tex2D(Tex, UV + float2(x * PS, y * PS))@$	float colored = 1 - step(p.r, 0) + 1 - step(p.g, 0) + 1 - step(p.b, 0)@	$	result = colored * min(p, result) + (1 - colored) * result@$}$}$return isColored * result + (1 - isColored) * float4(0,0,0,0)@;4;False;3;True;Tex;SAMPLER2D;;In;;Inherit;False;True;UV;FLOAT2;0,0;In;;Inherit;False;True;PS;FLOAT;0;In;;Inherit;False;My Custom Expression;True;False;0;3;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.CustomExpressionNode;44;40.46747,-427.2082;Inherit;False;float4 base = tex2D(Tex, UV)@$float4 result = base@$float isColored = result.a * Noise@$for(int x = -1@ x <= 1@ x++)${$for(int y = -1@ y <= 1@ y++)${$	float4 p = tex2D(Tex, UV + float2(x * PS, y * PS))@$	float colored = p.a * Noise * isColored@	$	result = colored * min(p, result) + (1 - colored) * result@$}$}$return result@;4;False;4;True;Tex;SAMPLER2D;;In;;Inherit;False;True;UV;FLOAT2;0,0;In;;Inherit;False;True;PS;FLOAT;0;In;;Inherit;False;True;Noise;FLOAT;0;In;;Inherit;False;My Custom Expression;True;False;0;4;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.CustomExpressionNode;15;-153.5,-126;Inherit;False;float4 base = tex2D(Tex, UV)@$float4 result = base@$float isColored = result.a * Noise@$for(int x = -1@ x <= 1@ x++)${$for(int y = -1@ y <= 1@ y++)${$	float4 p = tex2D(Tex, UV + float2(x * PS, y * PS))@$	float colored = p.a * Noise * isColored@	$	result = colored * min(p, result) + (1 - colored) * result@$}$}$return max(result, base - 0.1 * max(base - result, 0.205))@;4;False;4;True;Tex;SAMPLER2D;;In;;Inherit;False;True;UV;FLOAT2;0,0;In;;Inherit;False;True;PS;FLOAT;0;In;;Inherit;False;True;Noise;FLOAT;0;In;;Inherit;False;My Custom Expression;True;False;0;4;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.CustomExpressionNode;16;-162.6175,-419.6718;Inherit;False;float4 result = tex2D(Tex, UV)@$float isColored = 1 - step( result.r, 0) + 1 - step(result.g, 0) + 1 - step(result.b, 0)@$isColored = saturate(isColored)@$for(int x = -1@ x <= 1@ x++)${$for(int y = -1@ y <= 1@ y++)${$	float4 p = tex2D(Tex, UV + float2(x * PS, y * PS))@$	float colored = 1 - step(p.r, 0) + 1 - step(p.g, 0) + 1 - step(p.b, 0)@	$	result = colored * min(p, result) + (1 - colored) * result@$}$}$return isColored * result + (1 - isColored) * float4(0,0,0,0)@;4;False;3;True;Tex;SAMPLER2D;;In;;Inherit;False;True;UV;FLOAT2;0,0;In;;Inherit;False;True;PS;FLOAT;0;In;;Inherit;False;My Custom Expression;True;False;0;3;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;0;96,-128;Float;False;True;-1;2;ASEMaterialInspector;100;1;Flood;0770190933193b94aaa3065e307002fa;True;Unlit;0;0;Unlit;2;True;0;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;True;0;False;-1;0;False;-1;True;False;True;0;False;-1;True;True;True;True;True;0;False;-1;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;1;False;-1;True;3;False;-1;True;True;0;False;-1;0;False;-1;True;1;RenderType=Opaque=RenderType;True;2;0;False;False;False;False;False;False;False;False;False;True;1;LightMode=ForwardBase;False;0;False;0;0;Standard;1;Vertex Position,InvertActionOnDeselection;1;0;1;True;False;;0
 WireConnection;37;0;17;0
 WireConnection;32;0;37;0
@@ -200,4 +200,4 @@ WireConnection;15;2;1;0
 WireConnection;15;3;36;0
 WireConnection;0;0;15;0
 ASEEND*/
-//CHKSM=42AEAE33B55D50EF04872D4B9EB03D09BA3B144F
+//CHKSM=0DDA9A53039FA5B2585CEB299037E7BD8255B5B0

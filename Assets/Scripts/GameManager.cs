@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     Grid grid;
     public Grid Grid { get { return grid; } }
-    public GameObject floodLabel, stopLabel, restartLabel, continueLabel;
+    public GameObject floodLabel, stopLabel, restartLabel, continueLabel, creditsLabel;
 
     [Space()]
     [SerializeField]
@@ -64,15 +64,11 @@ public class GameManager : MonoBehaviour
     {
         if (CurrentLevel != null)
         {
-            if (CurrentLevel.IsWon && Input.GetKeyDown(Constants.CONTINUE_KEYCODE)
-#if UNITY_EDITOR
-                || (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.RightArrow))
-#endif
-                )
+            if (CurrentLevel.IsWon && Input.GetKeyDown(Constants.CONTINUE_KEYCODE) && !IsLastLevel() ||
+                (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.RightArrow)))
             {
                 CurrentLevel.StopLevel();
                 currentLevelIndex++;
-                //TODO: Check if game has ended
                 StartCurrentLevel();
             }
 #if UNITY_EDITOR
@@ -84,10 +80,11 @@ public class GameManager : MonoBehaviour
                 CurrentLevel = levels[currentLevelIndex].StartLevel();
             }
 
-            floodLabel.SetActive(!CurrentLevel.IsWon && !CurrentLevel.IsFlooding && (currentLevelIndex > 0 || CurrentLevel.HasMoved));
-            stopLabel.SetActive(!CurrentLevel.IsWon && CurrentLevel.IsFlooding && (currentLevelIndex > 0 || CurrentLevel.HasMoved));
-            restartLabel.SetActive(!CurrentLevel.IsWon && (currentLevelIndex > 0 || CurrentLevel.HasMoved));
-            continueLabel.SetActive(CurrentLevel.IsWon);
+            floodLabel.SetActive((!CurrentLevel.IsWon && !CurrentLevel.IsFlooding) || IsLastLevel());
+            stopLabel.SetActive(!CurrentLevel.IsWon && CurrentLevel.IsFlooding && (currentLevelIndex > 0 || CurrentLevel.HasMoved) && !IsLastLevel());
+            restartLabel.SetActive(!CurrentLevel.IsWon && (currentLevelIndex > 0 || CurrentLevel.HasMoved) && !IsLastLevel());
+            continueLabel.SetActive(CurrentLevel.IsWon && !IsLastLevel());
+            creditsLabel.SetActive((currentLevelIndex == 0 && !CurrentLevel.HasMoved) || IsLastLevel());
         }
 
 
@@ -110,5 +107,10 @@ public class GameManager : MonoBehaviour
         {
             CurrentLevel = levels[currentLevelIndex].StartLevel();
         }
+    }
+
+    bool IsLastLevel()
+    {
+        return currentLevelIndex == levels.Length - 1;
     }
 }
