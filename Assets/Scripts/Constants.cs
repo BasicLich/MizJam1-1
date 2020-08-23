@@ -21,7 +21,7 @@ public static class Constants
 
 
     // Commands
-    public const KeyCode FLOOD_KEYCODE = KeyCode.F;
+    public const KeyCode FLOOD_KEYCODE = KeyCode.S;
     public const KeyCode STOP_FLOOD_KEYCODE = KeyCode.S;
     public const KeyCode RESTART_KEYCODE = KeyCode.R;
     public const KeyCode CONTINUE_KEYCODE = KeyCode.C;

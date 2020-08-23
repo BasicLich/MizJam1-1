@@ -203,7 +203,6 @@ public class GameLevel : MonoBehaviour
                     if (isSuccess)
                     {
                         // Victory!
-                        Debug.Log("Victory!");
                         IsWon = true;
                     }
                 }

@@ -22,14 +22,16 @@ public class Tile : MonoBehaviour
         public int row;
         public Color color;
         public Vector2Int offset;
+        public float angle;
         public void SetColor(Color c)
         {
             color = c;
         }
-        public void SetParams(int _column, int _row, Color _color)
+        public void SetParams(int _column, int _row, float _angle, Color _color)
         {
             column = _column;
             row = _row;
+            angle = _angle;
             color = _color;
         }
     }
@@ -43,11 +45,17 @@ public class Tile : MonoBehaviour
 
     MaterialPropertyBlock propertyBlock;
 
+    TileAnim currentPlayedAnim;
+    int currentAnimIndex;
+    float currentAnimIndexStartDate;
+    System.Action onCurrentAnimEnd;
+
     public const string TEXTURE_PROPERTY = "_MainTex";
     public const string COLUMN_PROPERTY = "_Column";
     public const string ROW_PROPERTY = "_Row";
     public const string COLOR_PROPERTY = "_Color";
     public const string OFFSET_PROPERTY = "_Offset";
+    public const string ANGLE_PROPERTY = "_Angle";
 
 
     // Start is called before the first frame update
@@ -76,6 +84,10 @@ public class Tile : MonoBehaviour
             renderer.sharedMaterial = alphaBlended ? GameManager.Instance.TileAlphaMaterial : GameManager.Instance.TileMaterial;
             UpdatePropertyBlock();
         }
+        else
+        {
+            UpdateAnim();
+        }
     }
 
     public void SetTileIndex(int _column, int _row)
@@ -84,7 +96,7 @@ public class Tile : MonoBehaviour
     }
     public void SetTileIndex(int _column, int _row, Color _color)
     {
-        tileData.SetParams(_column, _row, _color);
+        tileData.SetParams(_column, _row, tileData.angle, _color);
         UpdatePropertyBlock();
     }
     public void SetColor(Color _color)
@@ -103,6 +115,56 @@ public class Tile : MonoBehaviour
         propertyBlock.SetInt(ROW_PROPERTY, tileData.row);
         propertyBlock.SetColor(COLOR_PROPERTY, tileData.color);
         propertyBlock.SetVector(OFFSET_PROPERTY, new Vector4(tileData.offset.x, tileData.offset.y));
+        propertyBlock.SetFloat(ANGLE_PROPERTY, tileData.angle);
         renderer.SetPropertyBlock(propertyBlock);
+    }
+
+    public void PlayAnim(TileAnim anim, System.Action onEndCallback = null)
+    {
+        if (anim.frames.Length > 0)
+        {
+            currentPlayedAnim = anim;
+            currentAnimIndex = 0;
+            ApplyAnimFrame();
+        }
+        else
+        {
+            Debug.LogError("Trying to play empty anim " + anim, anim);
+            currentPlayedAnim = null;
+        }
+        onCurrentAnimEnd = onEndCallback;
+    }
+    void UpdateAnim()
+    {
+        if (currentPlayedAnim != null)
+        {
+            TileAnim.AnimFrame animFrame = currentPlayedAnim.frames[currentAnimIndex];
+            if (animFrame.duration > 0)
+            {
+                if ((Time.time - currentAnimIndexStartDate) >= animFrame.duration)
+                {
+                    currentAnimIndex++;
+                    if (currentPlayedAnim.loop)
+                        currentAnimIndex %= currentPlayedAnim.frames.Length;
+
+                    if (currentPlayedAnim.frames.Length > currentAnimIndex)
+                    {
+                        ApplyAnimFrame();
+                    }
+                    else
+                    {
+                        currentPlayedAnim = null;
+                        onCurrentAnimEnd?.Invoke();
+                    }
+                }
+            }
+        }
+    }
+    void ApplyAnimFrame()
+    {
+        TileAnim.AnimFrame animFrame = currentPlayedAnim.frames[currentAnimIndex];
+        tileData.SetParams(animFrame.tileData.column, animFrame.tileData.row, animFrame.tileData.angle, currentPlayedAnim.color ? animFrame.tileData.color : tileData.color);
+        currentAnimIndexStartDate = Time.time;
+        UpdatePropertyBlock();
     }
 }

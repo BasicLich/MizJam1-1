@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9157178203618092078}
   - component: {fileID: 9157178203618092073}
   m_Layer: 8
-  m_Name: TargetTile
+  m_Name: Target1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,10 +46,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   renderer: {fileID: 9157178204161869432}
   tileData:
-    column: 0
-    row: 0
-    color: {r: 0.50980395, g: 0.50980395, b: 0, a: 1}
-    offset: {x: 0, y: 0}
+    column: 23
+    row: 12
+    color: {r: 0.7058824, g: 0.19607843, b: 0.7058824, a: 1}
+    offset: {x: 0, y: -1}
+    angle: 0
+  alphaBlended: 0
+  idleAnim: {fileID: 11400000, guid: 16614f93575d1b244a6e31713d14e59e, type: 2}
+  successAnim: {fileID: 11400000, guid: 08bf524882efba443a129a3fabae70b8, type: 2}
+  victoryIdleAnim: {fileID: 11400000, guid: 065b2dbda966557478abe6f711550f54, type: 2}
+  sampledTexture: {fileID: 0}
 --- !u!1 &9157178204161869438
 GameObject:
   m_ObjectHideFlags: 0

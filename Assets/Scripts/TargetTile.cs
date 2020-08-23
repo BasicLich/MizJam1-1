@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class TargetTile : GameTile
 {
+    //References
+    public TileAnim idleAnim, successAnim, victoryIdleAnim;
+
     // Starts from upper-left corner, goes clockwise
     bool[] coloredEdges;
 
     public bool IsSuccess { get; private set; }
-    public Texture2D readTexture;
+    Texture2D readTexture;
     const int sampleTextureSize = 1; //25 * 4;
     int currentSide = 0;
 
-    public RenderTexture sampledTexture;
+    RenderTexture sampledTexture;
 
     const float epsilon = 0.001f;
 
@@ -51,13 +54,14 @@ public class TargetTile : GameTile
         if (Application.isPlaying)
         {
             readTexture = new Texture2D(sampleTextureSize, sampleTextureSize, TextureFormat.ARGB32, false);
-            
+            ResetTarget();
         }
     }
 
     public void ResetTarget()
     {
         IsSuccess = false;
+        PlayAnim(idleAnim);
     }
 
     public bool CheckSuccess()
@@ -86,20 +90,25 @@ public class TargetTile : GameTile
                         : currentSide == 2 ? -1
                         : i - 1;
 
-                    Rect sampleRect = new Rect((baseX + localX) * Constants.RESOLUTION_UPSCALE + 1, resultTexture.height - ((baseY + localY) * Constants.RESOLUTION_UPSCALE + 1), sampleTextureSize, sampleTextureSize);
-                    readTexture.ReadPixels(sampleRect, 0, 0);
-                    readTexture.Apply();
-                    Color c = readTexture.GetPixel(0, 0);
-                    //if (c.r > 0 || c.g > 0 || c.b > 0)
-                    //{
-                    //    Debug.Log("Target " + gameObject.name + " has color " + c + " on side " + currentSide + ", i " + i + "; compared to " + tileData.color + " (is same: " + (c == tileData.color) + ") - " + Time.frameCount, gameObject);
-                    //}
-                    if (Mathf.Abs(c.r - tileData.color.r) < epsilon &&
-                        Mathf.Abs(c.g - tileData.color.g) < epsilon &&
-                        Mathf.Abs(c.b - tileData.color.b) < epsilon)
+                    float x = (baseX + localX) * Constants.RESOLUTION_UPSCALE + 1;
+                    float y = resultTexture.height - ((baseY + localY) * Constants.RESOLUTION_UPSCALE + 1);
+                    if (x >= 0 && y >= 0 && x < resultTexture.width && y < resultTexture.height)
                     {
-                        IsSuccess = true;
-                        break;
+                        Rect sampleRect = new Rect(x, y, sampleTextureSize, sampleTextureSize);
+                        readTexture.ReadPixels(sampleRect, 0, 0);
+                        readTexture.Apply();
+                        Color c = readTexture.GetPixel(0, 0);
+                        //if (c.r > 0 || c.g > 0 || c.b > 0)
+                        //{
+                        //    Debug.Log("Target " + gameObject.name + " has color " + c + " on side " + currentSide + ", i " + i + "; compared to " + tileData.color + " (is same: " + (c == tileData.color) + ") - " + Time.frameCount, gameObject);
+                        //}
+                        if (Mathf.Abs(c.r - tileData.color.r) < epsilon &&
+                            Mathf.Abs(c.g - tileData.color.g) < epsilon &&
+                            Mathf.Abs(c.b - tileData.color.b) < epsilon)
+                        {
+                            IsSuccess = true;
+                            break;
+                        }
                     }
                 }
             }
@@ -109,7 +118,17 @@ public class TargetTile : GameTile
 
             currentSide++;
             currentSide %= 4;
+
+            if (IsSuccess)
+            {
+                PlayAnim(successAnim, OnSuccessAnimEnd);
+            }
         }
         return IsSuccess;
+    }
+
+    void OnSuccessAnimEnd()
+    {
+        PlayAnim(victoryIdleAnim);
     }
 }

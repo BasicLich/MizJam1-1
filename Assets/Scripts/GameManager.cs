@@ -85,6 +85,19 @@ public class GameManager : MonoBehaviour
             restartLabel.SetActive(!CurrentLevel.IsWon && (currentLevelIndex > 0 || CurrentLevel.HasMoved));
             continueLabel.SetActive(CurrentLevel.IsWon);
         }
+
+
+        // Just in case it can be dynamically resized during gameplay; the goal is to have a pixel-perfect look, where each asset pixel
+        // takes an integer amount of screen pixel to render. Doesn't seem to work so well in editor though :/
+        int playgroundPixelsHeight = Constants.GRID_SIZE * Constants.TILE_FINAL_SIZE;
+        int ppp = Screen.height / playgroundPixelsHeight;
+        //Debug.Log("PlaygroundPixelsHeight " + playgroundPixelsHeight + " and Screen " + Screen.height + " gives ppp " + ppp);
+        if (ppp >= 1)
+        {
+            float tilesAmount = Constants.GRID_SIZE + (Screen.height - playgroundPixelsHeight * ppp) / ((float)Constants.TILE_FINAL_SIZE * ppp);
+            //Debug.Log("That gives a tilesAmount " + tilesAmount);
+            Camera.main.orthographicSize = tilesAmount / 2f;
+        }
     }
 
     void StartCurrentLevel()

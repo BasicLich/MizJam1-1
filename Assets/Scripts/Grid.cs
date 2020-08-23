@@ -26,9 +26,9 @@ public class Grid : MonoBehaviour
 
     Tile[] edgeTiles;
     float floodColorAnimStartDate = -1f;
-    float floodColorAnimFrameDuration = 0.2f;
-    int floodColorAnimStatesAmount = 10;
-    float floodColorAnimStateAmplitude = 0.05f;
+    float floodColorAnimFrameDuration = 0.05f;
+    int floodColorAnimStatesAmount = 20;
+    float floodColorAnimStateAmplitude = 0.03f;
     int currentEdgeColorStep;
 
     // Start is called before the first frame update
@@ -97,14 +97,15 @@ public class Grid : MonoBehaviour
                 nextFloodDate += 1f / (60f * floodSpeed);
             }
 
-            int edgeColorStep = Mathf.CeilToInt((Time.time - floodColorAnimStartDate) / floodColorAnimFrameDuration);
+            int edgeColorStep = Mathf.CeilToInt((Time.time - floodColorAnimStartDate) / floodColorAnimFrameDuration) + floodColorAnimStatesAmount / 2;
             edgeColorStep %= (floodColorAnimStatesAmount * 2);
             if (edgeColorStep >= floodColorAnimStatesAmount)
-                edgeColorStep = edgeColorStep - floodColorAnimStatesAmount;
+                edgeColorStep = (floodColorAnimStatesAmount * 2) - edgeColorStep;
             if (edgeColorStep != currentEdgeColorStep)
             {
                 currentEdgeColorStep = edgeColorStep;
-                float amplitude = (currentEdgeColorStep - floodColorAnimStatesAmount / 2) * floodColorAnimStatesAmount;
+                float amplitude = (currentEdgeColorStep - floodColorAnimStatesAmount / 2) * floodColorAnimStateAmplitude;
+                amplitude += GameManager.Instance.CurrentLevel.IsWon ? 0.3f : -0.2f;
                 Color c = GameManager.Instance.edgeColor;
                 c.r += amplitude;
                 c.g += amplitude;
