@@ -30242,6 +30242,8 @@ MonoBehaviour:
   creditsLabel: {fileID: 301101786}
   tileMaterial: {fileID: 2100000, guid: a6eebaedcf2735845be462350e2c1b25, type: 2}
   tileAlphaMaterial: {fileID: 2100000, guid: 6e6b71a9d2c6f5c48b6fc740de6d0d4f, type: 2}
+  simpleTextureMaterial: {fileID: 2100000, guid: a43251874aba62a49b726f5a3559657b,
+    type: 2}
   edgeColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
 --- !u!4 &838488712
 Transform:
@@ -30997,10 +30999,10 @@ Transform:
   - {fileID: 1997054264}
   - {fileID: 1158387696}
   - {fileID: 255341034}
-  - {fileID: 2132335780}
   - {fileID: 1212895897}
   - {fileID: 651960738}
   - {fileID: 404417025}
+  - {fileID: 2132335780}
   - {fileID: 796340}
   - {fileID: 587626651}
   - {fileID: 1910441363}

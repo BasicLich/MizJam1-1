@@ -33,6 +33,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     Material tileAlphaMaterial;
     public Material TileAlphaMaterial { get { return tileAlphaMaterial; } }
+    [SerializeField]
+    Material simpleTextureMaterial;
+    public Material SimpleTextureMaterial { get { return simpleTextureMaterial; } }
 
     [Header("Settings")]
     public Color edgeColor = Color.gray;
@@ -84,7 +87,7 @@ public class GameManager : MonoBehaviour
             stopLabel.SetActive(!CurrentLevel.IsWon && CurrentLevel.IsFlooding && (currentLevelIndex > 0 || CurrentLevel.HasMoved) && !IsLastLevel());
             restartLabel.SetActive(!CurrentLevel.IsWon && (currentLevelIndex > 0 || CurrentLevel.HasMoved) && !IsLastLevel());
             continueLabel.SetActive(CurrentLevel.IsWon && !IsLastLevel());
-            creditsLabel.SetActive((currentLevelIndex == 0 && !CurrentLevel.HasMoved) || IsLastLevel());
+            creditsLabel.SetActive((currentLevelIndex == 0 && !CurrentLevel.HasMoved && !CurrentLevel.IsWon) || IsLastLevel());
         }
 
 
